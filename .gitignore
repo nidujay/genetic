@@ -1,0 +1,6 @@
+# ignore object and archive files
+*.[oa]
+
+# ignore auto-saved files
+*~
+\#*\#

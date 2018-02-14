@@ -1,0 +1,30 @@
+#!/bin/bash
+
+cultures="alpha
+beta
+charlie
+delta"
+
+culture_count=$(echo "${cultures}" | wc -l)
+name_count=$(cat "$1" | wc -l)
+
+random_culture() {
+	seq 0 $(( ${culture_count} - 1)) | shuf | head -n1
+}
+
+random_prefs() {
+	seq 0 $(( ${name_count} - 1)) | shuf | head -n3
+}
+
+oldifs="${IFS}"
+IFS=$'\n'
+for name in $(cat "$1"); do
+	echo -n "{ \"${name}\", {"
+	for pref in $(random_prefs); do
+		echo -n "${pref}, "
+	done
+	echo "}},"
+done
+
+IFS="${oldifs}"
+echo
