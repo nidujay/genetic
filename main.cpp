@@ -1,5 +1,7 @@
 #include <iostream>
 #include <ga/ga.h>
+#include "fitness.h"
+#include "grade.h"
 
 #define MAX_VALUE	4
 
@@ -8,15 +10,14 @@ typedef GA1DArrayGenome<int> Grade;
 static float objective(GAGenome &g)
 {
 	auto &grade = static_cast<const Grade &>(g);
-	float score = 0.0;
+
+	Teacher_load f1(MAX_VALUE, 8, 12);
 
 	for (int i = 0; i < grade.length(); i++) {
-		if (grade[i] == (i % (MAX_VALUE + 1))) {
-			score++;
-		}
+		f1.process(i, grade[i]);
 	}
 
-	return score;
+	return f1.evaluate();
 }
 
 static void GradeInitializer(GAGenome & g)
@@ -26,6 +27,24 @@ static void GradeInitializer(GAGenome & g)
 	for (int i = 0; i < grade.length(); i++) {
 		grade[i] = GARandomInt(0, MAX_VALUE);
 	}
+}
+
+template<> int
+Grade::write(std::ostream & os) const
+{
+	auto &grade = static_cast<const Grade &>(*this);
+
+	for (auto t = 0; t < teacher_count(); t++) {
+		os << "----" << teacher(t) << "----" << std::endl;
+		for (int i = 0; i < grade.length(); i++) {
+			if (grade[i] == t) {
+				auto &s = get_student(i);
+				os << "  " << s.name << std::endl;
+			}
+		}
+	}
+
+	return os.fail() ? 1 : 0;
 }
 
 int main()

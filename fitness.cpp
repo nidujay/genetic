@@ -2,6 +2,34 @@
 #include "grade.h"
 #include <iostream>
 
+Teacher_load::Teacher_load(uint16_t n_teachers,
+		uint16_t min_students, uint16_t max_students)
+	: min_(min_students),
+	max_(max_students)
+{
+	for (auto i = 0; i < n_teachers; i++) {
+		load_.push_back(0);
+	}
+}
+
+void Teacher_load::process(uint16_t student, uint16_t teacher)
+{
+	load_[teacher]++;
+}
+
+float Teacher_load::evaluate()
+{
+	float score = 0.0;
+
+	for (auto &n : load_) {
+		if (n >= min_ && n <= max_) {
+			score++;
+		}
+	}
+
+	return score / load_.size();
+}
+
 bool is_all_students_allocated(const std::vector<int> &students)
 {
 	// values < 0 are indices to teachers
