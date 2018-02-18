@@ -12,8 +12,9 @@ Teacher_load::Teacher_load(uint16_t n_teachers,
 	}
 }
 
-void Teacher_load::process(uint16_t student, uint16_t teacher)
+void Teacher_load::process(uint16_t student, const Allotment &a)
 {
+	auto teacher = a.teacher(student);
 	load_[teacher]++;
 }
 
@@ -28,6 +29,30 @@ float Teacher_load::evaluate()
 	}
 
 	return score / load_.size();
+}
+
+Friend_requests::Friend_requests()
+	: total_(0),
+	matches_(0)
+{
+}
+
+void Friend_requests::process(uint16_t student, const Allotment &a)
+{
+	auto &s = get_student(student);
+	bool matched = false;
+
+	for (auto &peer : s.prefs) {
+		total_++;
+		if (!matched && a.teacher(student) == a.teacher(peer)) {
+			matches_++;
+		}
+	}
+}
+
+float Friend_requests::evaluate()
+{
+	return static_cast<float>(matches_) / static_cast<float>(total_);
 }
 
 bool is_all_students_allocated(const std::vector<int> &students)

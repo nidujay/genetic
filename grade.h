@@ -2,12 +2,13 @@
 #define GRADE_H
 
 #include <string>
+#include <vector>
 
 struct Student
 {
 	int class_id;
 	std::string name;
-	int prefs[4];
+	std::vector<int> prefs;
 };
 
 int student_count();

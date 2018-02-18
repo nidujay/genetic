@@ -4,10 +4,12 @@
 #include <cstdint>
 #include <vector>
 
+#include "allotment.h"
+
 class Fitness
 {
 	public:
-		virtual void process(uint16_t student, uint16_t teacher) = 0;
+		virtual void process(uint16_t student, const Allotment &a) = 0;
 		virtual float evaluate() = 0;
 };
 
@@ -17,13 +19,25 @@ class Teacher_load : public Fitness
 		Teacher_load(uint16_t n_teachers,
 				uint16_t min_students, uint16_t max_students);
 
-		virtual void process(uint16_t student, uint16_t teacher) override;
+		virtual void process(uint16_t student, const Allotment &a) override;
 		virtual float evaluate() override;
 
 	private:
 		std::vector<uint16_t> load_;
 		uint16_t min_;
 		uint16_t max_;
+};
+
+class Friend_requests : public Fitness
+{
+	public:
+		Friend_requests();
+		virtual void process(uint16_t student, const Allotment &a) override;
+		virtual float evaluate() override;
+
+	private:
+		uint16_t total_;
+		uint16_t matches_;
 };
 
 bool is_all_students_allocated(const std::vector<int> &students);
