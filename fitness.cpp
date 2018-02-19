@@ -1,5 +1,7 @@
 #include "fitness.h"
 #include "grade.h"
+
+#include <cstdlib>
 #include <iostream>
 
 Teacher_load::Teacher_load(uint16_t n_teachers,
@@ -46,6 +48,7 @@ void Friend_requests::process(uint16_t student, const Allotment &a)
 		total_++;
 		if (!matched && a.teacher(student) == a.teacher(peer)) {
 			matches_++;
+			matched = true;
 		}
 	}
 }
@@ -59,6 +62,40 @@ bool is_all_students_allocated(const std::vector<int> &students)
 {
 	// values < 0 are indices to teachers
 	return students[0] < 0;
+}
+
+Cross_mix::Cross_mix(uint16_t n_old_teachers, uint16_t n_new_teachers)
+	: total_(0),
+	  cell_count_(n_old_teachers * n_new_teachers)
+{
+	Previous_teachers p(n_old_teachers, 0);
+	next_teachers_.assign(n_new_teachers, p);
+}
+
+void Cross_mix::process(uint16_t student, const Allotment &a)
+{
+	auto s = get_student(student);
+	auto teacher = a.teacher(student);
+	auto &prev_list = next_teachers_[teacher];
+	prev_list[s.prev_teacher]++;
+	total_++;
+}
+
+float Cross_mix::evaluate()
+{
+	auto cell_target = total_ / (cell_count_);
+	float score = 0.0;
+
+	for (const auto &prev_list : next_teachers_) {
+		for (const auto &cell : prev_list) {
+			auto diff = abs(cell - cell_target);
+			if (diff <= 1) {
+				score++;
+			}
+		}
+	}
+
+	return score / cell_count_;
 }
 
 static std::vector<int> next_class(const std::vector<int> &grade,

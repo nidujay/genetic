@@ -13,6 +13,7 @@ class Fitness
 		virtual float evaluate() = 0;
 };
 
+// Ensure teacher load within acceptable limits
 class Teacher_load : public Fitness
 {
 	public:
@@ -28,6 +29,7 @@ class Teacher_load : public Fitness
 		uint16_t max_;
 };
 
+// Ensure at-least one of the requested friends are in new class
 class Friend_requests : public Fitness
 {
 	public:
@@ -38,6 +40,26 @@ class Friend_requests : public Fitness
 	private:
 		uint16_t total_;
 		uint16_t matches_;
+};
+
+// Ensure that students are mixed across classes
+class Cross_mix : public Fitness
+{
+	public:
+		Cross_mix(uint16_t n_old_teachers, uint16_t n_new_teachers);
+		virtual void process(uint16_t student, const Allotment &a) override;
+		virtual float evaluate() override;
+
+	private:
+		// This is a 2D array that keeps track of how many students
+		// for the new teacher share the same previous teacher. The goal
+		// is the even this out.
+		uint16_t total_;
+		uint16_t cell_count_;
+		typedef std::vector<uint16_t> Previous_teachers;
+		typedef std::vector<Previous_teachers> Next_teachers;
+
+		Next_teachers next_teachers_;
 };
 
 bool is_all_students_allocated(const std::vector<int> &students);

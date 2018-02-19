@@ -1,4 +1,4 @@
-from random import shuffle
+import random
 
 names = [
     "Brice Rubio", 
@@ -62,18 +62,20 @@ def random_prefs(student_id):
     end = start + class_size;
 
     choices = range(start, end)
-    shuffle(choices)
+    random.shuffle(choices)
 
     rv = '{'
     for i in choices[0:4]:
-        if (i == student_id):
-            rv += str(-1) + ','
-        else:
+        if (i != student_id):
             rv += str(i) + ','
 
     rv += '}'
     return rv
 
+def academic_level():
+    levels=['high', 'mid', 'mid', 'mid', 'mid', 'mid', 'mid', 'low']
+    return random.choice(levels)
+
 for i in range(len(names)):
     class_id = i / class_size;
-    print '\t{ ', class_id, ', "' + names[i] + '",', random_prefs(i), '},'
+    print '\t{ ', class_id, ', "' + names[i] + '",', random_prefs(i) + ',', academic_level(), '},'

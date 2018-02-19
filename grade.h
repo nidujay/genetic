@@ -3,10 +3,11 @@
 
 #include <string>
 #include <vector>
+#include <cstdint>
 
 struct Student
 {
-	int class_id;
+	uint16_t prev_teacher;
 	std::string name;
 	std::vector<int> prefs;
 };

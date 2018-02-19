@@ -33,13 +33,15 @@ static float objective(GAGenome &g)
 	Grade grade(repr);
 	Teacher_load f1(MAX_VALUE, 8, 12);
 	Friend_requests f2;
+	Cross_mix f3(5, teacher_count());
 
 	for (int i = 0; i < repr.length(); i++) {
 		f1.process(i, grade);
 		f2.process(i, grade);
+		f3.process(i, grade);
 	}
 
-	return f1.evaluate() + f2.evaluate();
+	return f1.evaluate() + f2.evaluate() + f3.evaluate();
 }
 
 static void RepresentationInitializer(GAGenome & g)
@@ -70,7 +72,7 @@ Representation::write(std::ostream & os) const
 		for (int i = 0; i < grade.length(); i++) {
 			if (grade[i] == t) {
 				auto &s = get_student(i);
-				os << "  " << std::setw(20) << s.name;
+				os << "  " << std::setw(20) << s.name << std::setw(2) << s.prev_teacher;
 				writePrefs(s, os);
 				os << std::endl;
 			}
