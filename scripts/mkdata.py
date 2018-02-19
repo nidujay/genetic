@@ -1,81 +1,44 @@
 import random
 
-names = [
-    "Brice Rubio", 
-    "Heidy Manning", 
-    "Camryn Swanson", 
-    "Yael Washington", 
-    "Karsyn Osborne", 
-    "Bradyn Ali", 
-    "Skye Hood", 
-    "Halle Drake", 
-    "Destinee Morton", 
-    "Jamir Schneider", 
-    "Emma Hogan", 
-    "Christine Sanders", 
-    "Salma Horn", 
-    "Clay Shelton", 
-    "Peyton Mays", 
-    "Miles Chambers", 
-    "Pamela Yoder", 
-    "Jayvion Hopkins", 
-    "Carlie Galvan", 
-    "Messiah Hobbs", 
-    "Daniela Rosales", 
-    "Jordan Arroyo", 
-    "Jensen Robles", 
-    "Savanah Lam", 
-    "Darwin Middleton", 
-    "Nyasia Randall", 
-    "Marc Nixon", 
-    "Abigayle Downs", 
-    "Sullivan Skinner", 
-    "Hallie Morrison", 
-    "Ethen Howe", 
-    "Kristina Montoya", 
-    "Cali Archer", 
-    "Rebekah Hawkins", 
-    "Taniyah Kerr", 
-    "Janiyah Ball", 
-    "Maverick Peck", 
-    "Karina Mitchell", 
-    "Ronnie Schmitt", 
-    "Bernard Welch", 
-    "Edith Montes", 
-    "Ashlee Stephenson", 
-    "Danna Yu", 
-    "Izayah Oliver", 
-    "Livia Barnett", 
-    "Davion Benton", 
-    "Yuliana Garrison", 
-    "Serena Ho", 
-    "Quintin Ortega", 
-    "Sawyer Arellano", 
-]
+from_count = 8
 
-culture_mix=[0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3]
-class_size=10
+def mkstudent(n):
+    levels = ['Q1', 'Q2', 'Q2', 'Q3', 'Q3', 'Q4']
+    return {
+            'name' : 'Student ' + str(n),
+            'from' : random.choice(range(from_count)),
+            'level' : random.choice(levels)
+    }
 
-def random_prefs(student_id):
-    class_id = student_id / class_size;
-    start = class_id * class_size;
-    end = start + class_size;
+def filter_from(students, from_class):
+    result=[]
+    for idx,s in enumerate(students):
+        if s['from'] == from_class:
+            result.append(idx)
+    return result
 
-    choices = range(start, end)
-    random.shuffle(choices)
+def make_friends(who, students):
+    class_mates=filter_from(students, who['from'])
+    random.shuffle(class_mates)
+    options=class_mates[0:4]
+    friends=[f for f in options if who['name'] != students[f]['name']]
+    return friends
 
-    rv = '{'
-    for i in choices[0:4]:
-        if (i != student_id):
-            rv += str(i) + ','
+students = [ mkstudent(i)  for i in range(83)]
 
-    rv += '}'
-    return rv
+for s in students:
+    s['friends'] = make_friends(s, students);
 
-def academic_level():
-    levels=['high', 'mid', 'mid', 'mid', 'mid', 'mid', 'mid', 'low']
-    return random.choice(levels)
+def to_c_array(l):
+    r = '{'
+    for i in l:
+        r += str(i) + ','
 
-for i in range(len(names)):
-    class_id = i / class_size;
-    print '\t{ ', class_id, ', "' + names[i] + '",', random_prefs(i) + ',', academic_level(), '},'
+    return r + '}'
+
+def print_student(s):
+    print '\t{ ' + str(s['from']) + ', "' + s['name'] + '", ' + s['level'] + ', ' + to_c_array(s['friends']) + '},'
+
+for s in students:
+    print_student(s)
+
