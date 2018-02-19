@@ -5,8 +5,6 @@
 #include "grade.h"
 #include "allotment.h"
 
-#define MAX_VALUE	4
-
 typedef GA1DArrayGenome<int> Representation;
 
 class Grade : public Allotment
@@ -31,7 +29,7 @@ static float objective(GAGenome &g)
 	auto &repr = static_cast<const Representation &>(g);
 
 	Grade grade(repr);
-	Teacher_load f1(MAX_VALUE, 8, 12);
+	Teacher_load f1(teacher_count() - 1, 19, 22);
 	Friend_requests f2;
 	Cross_mix f3(5, teacher_count());
 
@@ -49,7 +47,7 @@ static void RepresentationInitializer(GAGenome & g)
 	auto &grade = static_cast<Representation &>(g);
 
 	for (int i = 0; i < grade.length(); i++) {
-		grade[i] = GARandomInt(0, MAX_VALUE);
+		grade[i] = GARandomInt(0, teacher_count() - 1);
 	}
 }
 
@@ -57,7 +55,7 @@ static void writePrefs(const Student &s, std::ostream & os)
 {
 	for (auto &p : s.prefs) {
 		if (p >= 0) {
-			os << std::setw(20) << get_student(p).name;
+			os << std::setw(15) << get_student(p).name;
 		}
 	}
 }
@@ -72,7 +70,7 @@ Representation::write(std::ostream & os) const
 		for (int i = 0; i < grade.length(); i++) {
 			if (grade[i] == t) {
 				auto &s = get_student(i);
-				os << "  " << std::setw(20) << s.name << std::setw(2) << s.prev_teacher;
+				os << "  " << std::setw(15) << s.name << std::setw(5) << s.prev_teacher;
 				writePrefs(s, os);
 				os << std::endl;
 			}
@@ -84,7 +82,7 @@ Representation::write(std::ostream & os) const
 
 int main()
 {
-	Representation genome(50, objective);
+	Representation genome(student_count(), objective);
 
 	genome.initializer(RepresentationInitializer);
 

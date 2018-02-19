@@ -5,10 +5,19 @@
 #include <vector>
 #include <cstdint>
 
+enum Academic_level
+{
+	Q1,
+	Q2,
+	Q3,
+	Q4
+};
+
 struct Student
 {
 	uint16_t prev_teacher;
 	std::string name;
+	Academic_level level;
 	std::vector<int> prefs;
 };
 

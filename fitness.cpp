@@ -95,7 +95,7 @@ float Cross_mix::evaluate()
 		}
 	}
 
-	return score / cell_count_;
+	return (score / cell_count_) / 2;
 }
 
 static std::vector<int> next_class(const std::vector<int> &grade,
