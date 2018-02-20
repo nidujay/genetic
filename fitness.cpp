@@ -1,13 +1,11 @@
 #include "fitness.h"
 #include "grade.h"
 
-#include <cstdlib>
+#include <cmath>
 #include <iostream>
 
-Teacher_load::Teacher_load(uint16_t n_teachers,
-		uint16_t min_students, uint16_t max_students)
-	: min_(min_students),
-	max_(max_students)
+Teacher_load::Teacher_load(uint16_t n_teachers)
+	: total_(0)
 {
 	for (auto i = 0; i < n_teachers; i++) {
 		load_.push_back(0);
@@ -18,16 +16,17 @@ void Teacher_load::process(uint16_t student, const Allotment &a)
 {
 	auto teacher = a.teacher(student);
 	load_[teacher]++;
+	total_++;
 }
 
 float Teacher_load::evaluate()
 {
+	const float target = static_cast<float>(total_) / load_.size();
 	float score = 0.0;
 
-	for (auto &n : load_) {
-		if (n >= min_ && n <= max_) {
-			score++;
-		}
+	for (const auto &n : load_) {
+		auto diff = fabs(target - n);
+		score += static_cast<float>(total_ - diff) / total_;
 	}
 
 	return score / load_.size();

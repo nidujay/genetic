@@ -29,17 +29,15 @@ static float objective(GAGenome &g)
 	auto &repr = static_cast<const Representation &>(g);
 
 	Grade grade(repr);
-	Teacher_load f1(teacher_count() - 1, 19, 22);
+	Teacher_load f1(teacher_count());
 	Friend_requests f2;
-	Cross_mix f3(5, teacher_count());
 
 	for (int i = 0; i < repr.length(); i++) {
 		f1.process(i, grade);
 		f2.process(i, grade);
-		f3.process(i, grade);
 	}
 
-	return f1.evaluate() + f2.evaluate() + f3.evaluate();
+	return f1.evaluate() + f2.evaluate();
 }
 
 static void RepresentationInitializer(GAGenome & g)

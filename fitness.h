@@ -17,16 +17,14 @@ class Fitness
 class Teacher_load : public Fitness
 {
 	public:
-		Teacher_load(uint16_t n_teachers,
-				uint16_t min_students, uint16_t max_students);
+		Teacher_load(uint16_t n_teachers);
 
 		virtual void process(uint16_t student, const Allotment &a) override;
 		virtual float evaluate() override;
 
 	private:
 		std::vector<uint16_t> load_;
-		uint16_t min_;
-		uint16_t max_;
+		uint16_t total_;
 };
 
 // Ensure at-least one of the requested friends are in new class
