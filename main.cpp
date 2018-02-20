@@ -49,12 +49,12 @@ static void RepresentationInitializer(GAGenome & g)
 	}
 }
 
-static void writePrefs(const Student &s, std::ostream & os)
+static void writePrefs(const Student &s, uint16_t teacher_id,
+	       	const Representation &grade, std::ostream & os)
 {
 	for (auto &p : s.prefs) {
-		if (p >= 0) {
-			os << std::setw(15) << get_student(p).name;
-		}
+		auto & info = get_student(p);
+		os << std::setw(15) << info.name << (teacher_id == grade[p] ? " <":"  ");
 	}
 }
 
@@ -65,11 +65,23 @@ Representation::write(std::ostream & os) const
 
 	for (auto t = 0; t < teacher_count(); t++) {
 		os << "----" << teacher(t) << "----" << std::endl;
+		os << "  "
+			<< " |" << std::setw(15) << "Name"
+			<< " |" << std::setw(3) << "Lvl"
+			<< " |" << std::setw(5) << "From"
+			<< " |" << std::setw(15) << "Friends"
+			<< std::endl;
+
 		for (int i = 0; i < grade.length(); i++) {
 			if (grade[i] == t) {
 				auto &s = get_student(i);
-				os << "  " << std::setw(15) << s.name << std::setw(5) << s.prev_teacher;
-				writePrefs(s, os);
+				os << "  "
+					<< " |" << std::setw(15) << s.name
+					<< " |" << std::setw(3) << academic_level(s.level)
+					<< " |" << std::setw(5) << s.prev_teacher
+					<< " |";
+
+				writePrefs(s, t, grade, os);
 				os << std::endl;
 			}
 		}
@@ -96,7 +108,7 @@ int main()
   	ga.pCrossover(2.0);
 	ga.evolve();
 
-	std::cout << ga.statistics() << std::endl;
+	//std::cout << ga.statistics() << std::endl;
 	std::cout << ga.statistics().bestIndividual() << std::endl;
 
 	return 0;

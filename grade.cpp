@@ -120,3 +120,15 @@ const std::string teacher(int id)
 
 	return teachers[id];
 }
+
+std::string academic_level(Academic_level l)
+{
+	static const std::string levels[] = {
+		"Q1",
+		"Q2",
+		"Q3",
+		"Q4"
+	};
+
+	return levels[l];
+}

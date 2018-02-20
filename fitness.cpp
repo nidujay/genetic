@@ -44,12 +44,12 @@ void Friend_requests::process(uint16_t student, const Allotment &a)
 	bool matched = false;
 
 	for (auto &peer : s.prefs) {
-		total_++;
 		if (!matched && a.teacher(student) == a.teacher(peer)) {
 			matches_++;
 			matched = true;
 		}
 	}
+	total_++;
 }
 
 float Friend_requests::evaluate()

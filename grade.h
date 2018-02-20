@@ -27,4 +27,6 @@ const Student &get_student(int id);
 int teacher_count();
 const std::string teacher(int id);
 
+std::string academic_level(Academic_level l);
+
 #endif
