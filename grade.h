@@ -5,12 +5,16 @@
 #include <vector>
 #include <cstdint>
 
+#define ACADEMIC_LEVELS(macro)	\
+	macro(Q1)		\
+	macro(Q2)		\
+	macro(Q3)		\
+	macro(Q4)
+
+#define ACADEMIC_LEVEL_ENUM(level)	level,
 enum Academic_level
 {
-	Q1,
-	Q2,
-	Q3,
-	Q4
+	ACADEMIC_LEVELS(ACADEMIC_LEVEL_ENUM)
 };
 
 struct Student
@@ -28,5 +32,6 @@ int teacher_count();
 const std::string teacher(int id);
 
 std::string academic_level(Academic_level l);
+const std::vector<std::string> &academic_levels();
 
 #endif

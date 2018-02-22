@@ -121,14 +121,17 @@ const std::string teacher(int id)
 	return teachers[id];
 }
 
+#define ACADEMIC_LEVEL_STRING(level) std::string(#level),
+static const std::vector<std::string> levels = {
+	ACADEMIC_LEVELS(ACADEMIC_LEVEL_STRING)
+};
+
 std::string academic_level(Academic_level l)
 {
-	static const std::string levels[] = {
-		"Q1",
-		"Q2",
-		"Q3",
-		"Q4"
-	};
-
 	return levels[l];
+}
+
+const std::vector<std::string> &academic_levels()
+{
+	return levels;
 }

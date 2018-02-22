@@ -22,6 +22,7 @@ add_executable(genetic
 	main.cpp
 	fitness.cpp
 	grade.cpp
+	histogram.cpp
 )
 
 target_link_libraries(genetic ${GALIB_LIBRARIES})

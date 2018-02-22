@@ -5,6 +5,7 @@
 #include <vector>
 
 #include "allotment.h"
+#include "histogram.h"
 
 class Fitness
 {
@@ -38,6 +39,20 @@ class Friend_requests : public Fitness
 	private:
 		uint16_t total_;
 		uint16_t matches_;
+};
+
+// Ensure academic levels are distributed evenly across classes
+class Academic_levels : public Fitness
+{
+	public:
+		Academic_levels(uint16_t n_teachers);
+		virtual void process(uint16_t student, const Allotment &a) override;
+		virtual float evaluate() override;
+
+	private:
+		Histogram dist_;
+		std::vector<Histogram> class_dist_;
+		uint16_t total_;
 };
 
 // Ensure that students are mixed across classes

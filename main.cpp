@@ -4,6 +4,7 @@
 #include "fitness.h"
 #include "grade.h"
 #include "allotment.h"
+#include "histogram.h"
 
 typedef GA1DArrayGenome<int> Representation;
 
@@ -29,15 +30,19 @@ static float objective(GAGenome &g)
 	auto &repr = static_cast<const Representation &>(g);
 
 	Grade grade(repr);
-	Teacher_load f1(teacher_count());
-	Friend_requests f2;
+	Teacher_load teacher_load(teacher_count());
+	Friend_requests friend_requests;
+	Academic_levels academic_levels(teacher_count());
 
 	for (int i = 0; i < repr.length(); i++) {
-		f1.process(i, grade);
-		f2.process(i, grade);
+		teacher_load.process(i, grade);
+		friend_requests.process(i, grade);
+		academic_levels.process(i, grade);
 	}
 
-	return f1.evaluate() + f2.evaluate();
+	return teacher_load.evaluate()
+	       	+ friend_requests.evaluate()
+	       	+ academic_levels.evaluate();
 }
 
 static void RepresentationInitializer(GAGenome & g)
@@ -62,6 +67,7 @@ template<> int
 Representation::write(std::ostream & os) const
 {
 	auto &grade = static_cast<const Representation &>(*this);
+	Histogram global_hist;
 
 	for (auto t = 0; t < teacher_count(); t++) {
 		os << "----" << teacher(t) << "----" << std::endl;
@@ -72,6 +78,7 @@ Representation::write(std::ostream & os) const
 			<< " |" << std::setw(15) << "Friends"
 			<< std::endl;
 
+		Histogram hist;
 		for (int i = 0; i < grade.length(); i++) {
 			if (grade[i] == t) {
 				auto &s = get_student(i);
@@ -83,9 +90,19 @@ Representation::write(std::ostream & os) const
 
 				writePrefs(s, t, grade, os);
 				os << std::endl;
+
+				hist[academic_level(s.level)]++;
+				global_hist[academic_level(s.level)]++;
 			}
 		}
+		os << std::endl
+			<< "Academic level distribution in class" << std::endl
+			<< hist << std::endl;
 	}
+
+	os << std::endl
+		<< "Grade wide academic level distribution" << std::endl << std::endl
+		<< global_hist;
 
 	return os.fail() ? 1 : 0;
 }
