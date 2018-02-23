@@ -59,7 +59,9 @@ static void writePrefs(const Student &s, uint16_t teacher_id,
 {
 	for (auto &p : s.prefs) {
 		auto & info = get_student(p);
-		os << std::setw(15) << info.name << (teacher_id == grade[p] ? " <":"  ");
+		if (teacher_id == grade[p]) {
+			os << std::setw(15) << info.name;
+		}
 	}
 }
 
