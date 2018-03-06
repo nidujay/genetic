@@ -28,6 +28,7 @@ add_executable(genetic
 target_link_libraries(genetic ${GALIB_LIBRARIES})
 
 add_library(school-grade
+	grade.cpp
 	fitness.cpp
 )
 

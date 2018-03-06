@@ -2,6 +2,7 @@ find_package(CppUTest REQUIRED)
 
 add_executable(tests
 	test-fitness.cpp
+	test-grade.cpp
 	main.cpp
 )
 

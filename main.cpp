@@ -71,6 +71,8 @@ Representation::write(std::ostream & os) const
 	auto &grade = static_cast<const Representation &>(*this);
 	Histogram global_hist;
 
+	auto &from = from_classes();
+
 	for (auto t = 0; t < teacher_count(); t++) {
 		os << "----" << teacher(t) << "----" << std::endl;
 		os << "  "
@@ -87,7 +89,7 @@ Representation::write(std::ostream & os) const
 				os << "  "
 					<< " |" << std::setw(15) << s.name
 					<< " |" << std::setw(3) << academic_level(s.level)
-					<< " |" << std::setw(5) << s.prev_teacher
+					<< " |" << std::setw(5) << from[s.prev_teacher]
 					<< " |";
 
 				writePrefs(s, t, grade, os);
@@ -119,11 +121,15 @@ int main()
 	GASteadyStateGA::registerDefaultParameters(params);
 
 	GASteadyStateGA ga(genome);
+	params.set(gaNnGenerations, 5000);
+	params.set(gaNscoreFrequency, 1);
+	params.set(gaNflushFrequency, 50);
+	params.set(gaNscoreFilename, "bog.dat");
 	ga.parameters(params);
   	ga.populationSize(1000);
 	ga.maximize();
   	ga.selectScores(GAStatistics::AllScores);
-  	ga.pMutation(0.02);
+  	ga.pMutation(0.03);
   	ga.pCrossover(2.0);
 	ga.evolve();
 
